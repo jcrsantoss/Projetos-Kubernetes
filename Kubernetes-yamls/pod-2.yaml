@@ -1,0 +1,23 @@
+#Pod rodando com dois containers
+#`args` para passar um argumento para o container no caso sleep
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod2
+  name: pod2
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources: {}
+  - image: busybox
+    name: busybox
+    args:
+    - sleep
+    - "600" 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
