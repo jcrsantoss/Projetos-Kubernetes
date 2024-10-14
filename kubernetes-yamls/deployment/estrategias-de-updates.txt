@@ -1,0 +1,38 @@
+RollingUpdate
+Atualização gradual: Em vez de substituir todos os pods antigos de uma vez (o que poderia causar tempo de inatividade), o Kubernetes substitui um ou mais pods por novos em uma sequência controlada.
+Controle de disponibilidade: Enquanto novos pods são criados, os antigos são removidos apenas quando os novos estão prontos para receber tráfego.
+
+Parâmetros chave:
+maxUnavailable: Define o número máximo de pods que podem estar indisponíveis durante a atualização. Pode ser um número inteiro ou uma porcentagem.
+maxSurge: Define quantos pods extras podem ser criados além do número de réplicas especificadas para manter a disponibilidade. Também pode ser um número ou uma porcentagem.
+
+Exemplo 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.15.0
+
+Recreate 
+A estratégia Recreate no Kubernetes remove todos os pods existentes de um Deployment antes de criar novos pods durante uma atualização.
+Recreate é útil quando os novos e antigos pods não podem coexistir, como em casos de incompatibilidades entre versões de uma aplicação ou de bancos de dados.
+Ao contrário da RollingUpdate, que faz a atualização gradualmente, o Recreate substitui tudo de uma vez.
+
+  strategy:
+    type: Recreate
+

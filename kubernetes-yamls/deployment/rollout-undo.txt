@@ -1,0 +1,14 @@
+O comando kubectl rollout undo permite reverter um Deployment, DaemonSet, ou StatefulSet para uma versão anterior em caso de falha ou problemas com a atualização mais recente. Ele desfaz o último rollout e restaura a aplicação para um estado anterior estável, sem a necessidade de alterar o arquivo de configuração manualmente.
+
+Reverter o último rollout: Esse comando desfaz a última alteração feita no Deployment.
+kubectl rollout undo deployment/nginx-deployment
+
+Reverter para uma revisão específica: Além de desfazer o último rollout, você pode especificar uma revisão anterior específica.
+kubectl rollout undo deployment/nginx-deployment --to-revision=2
+
+Verificar o histórico de rollout: Antes de realizar um undo, você pode verificar o histórico das revisões disponíveis:
+kubectl rollout history deployment/nginx-deployment
+
+Verificar o status do rollout: Após desfazer um rollout, você pode verificar o status da reversão com o seguinte comando:
+kubectl rollout status deployment/nginx-deployment
+
