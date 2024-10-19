@@ -1,0 +1,7 @@
+Um DaemonSet no Kubernetes é um recurso que garante que uma cópia específica de um pod seja executada em todos (ou em um subconjunto) dos nós de um cluster. Ele é amplamente utilizado para implantar serviços de infraestrutura que precisam rodar em cada nó, como ferramentas de monitoramento (ex.: Prometheus Node Exporter) ou de coleta de logs (ex.: Fluentd).
+
+Funcionamento:
+O DaemonSet cria e gerencia pods em cada nó do cluster.
+Cada vez que um novo nó é adicionado ao cluster, o DaemonSet automaticamente agenda um novo pod para ser executado nesse nó.
+Se um nó é removido, os pods do DaemonSet correspondentes também são removidos.
+DaemonSets podem ser configurados para rodar em todos os nós ou apenas em nós específicos, dependendo das regras de afinidade ou seleção de nós.
