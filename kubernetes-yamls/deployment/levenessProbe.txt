@@ -1,0 +1,95 @@
+A liveness probe no Kubernetes é usada para verificar se um container está vivo (ou seja, funcionando corretamente). Se o container falhar nessa verificação, o Kubernetes o reinicia. Isso é útil para detectar quando um container está travado ou em um estado onde ele não pode se recuperar, e reiniciá-lo automaticamente para restaurar o serviço.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-example
+spec:
+  containers:
+  - name: my-app
+    image: my-app-image
+    ports:
+    - containerPort: 8080
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 20
+
+Explicação
+livenessProbe: Define a verificação de liveness do container. Neste exemplo, o Kubernetes verifica se o container está vivo acessando o endpoint /healthz via HTTP.
+
+httpGet: Tipo de liveness probe que realiza uma requisição HTTP no caminho /healthz na porta 8080 do container.
+
+initialDelaySeconds: O número de segundos que o Kubernetes espera antes de executar a primeira verificação de liveness após iniciar o container. Aqui, a verificação é realizada 15 segundos após o container ser iniciado.
+
+periodSeconds: Intervalo entre cada verificação subsequente de liveness. Neste caso, a verificação será feita a cada 20 segundos.
+
+
+
+A liveness probe no Kubernetes é usada para verificar se um container está vivo (ou seja, funcionando corretamente). Se o container falhar nessa verificação, o Kubernetes o reinicia. Isso é útil para detectar quando um container está travado ou em um estado onde ele não pode se recuperar, e reiniciá-lo automaticamente para restaurar o serviço.
+
+Exemplo de Liveness Probe
+Aqui está um exemplo simples de liveness probe que faz uma verificação via HTTP em um endpoint:
+
+yaml
+Copy code
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-example
+spec:
+  containers:
+  - name: my-app
+    image: my-app-image
+    ports:
+    - containerPort: 8080
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 20
+Explicação
+livenessProbe: Define a verificação de liveness do container. Neste exemplo, o Kubernetes verifica se o container está vivo acessando o endpoint /healthz via HTTP.
+
+httpGet: Tipo de liveness probe que realiza uma requisição HTTP no caminho /healthz na porta 8080 do container.
+
+initialDelaySeconds: O número de segundos que o Kubernetes espera antes de executar a primeira verificação de liveness após iniciar o container. Aqui, a verificação é realizada 15 segundos após o container ser iniciado.
+
+periodSeconds: Intervalo entre cada verificação subsequente de liveness. Neste caso, a verificação será feita a cada 20 segundos.
+
+
+##/##
+Outros Tipos de Liveness Probes
+Além de requisições HTTP, você pode definir outros tipos de liveness probes:
+
+Verificação de Socket TCP:
+
+Verifica se uma conexão TCP pode ser estabelecida em uma porta específica:
+
+
+livenessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+Comando Exec:
+
+Executa um comando no container e verifica se ele retorna com sucesso:
+
+  livenessProbe:
+    exec:
+      command:
+      - cat
+      - /tmp/healthy
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  
+Conclusão
+A liveness probe ajuda a garantir que um container sempre esteja em um estado saudável. Se a probe detectar que o container falhou (por exemplo, parou de responder ou travou), ele será reiniciado automaticamente.
+
+
+
