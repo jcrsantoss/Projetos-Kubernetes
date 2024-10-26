@@ -1,5 +1,6 @@
 kubeadm: É uma ferramenta para criar e gerenciar um cluster Kubernetes em vários nós. Ele automatiza muitas das tarefas de configuração do cluster, incluindo a instalação do control plane e dos nodes. É altamente configurável e pode ser usado para criar clusters personalizados.
 
+
 principais pré-requisitos:
 
     Linux
