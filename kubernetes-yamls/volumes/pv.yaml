@@ -1,0 +1,16 @@
+apiVersion: v1  # Corrigido para minúsculo
+kind: PersistentVolume
+metadata:
+  name: meu-pv
+  labels:
+    storage: lento
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:  # Corrigido de 'accesModes' para 'accessModes'
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data
+  storageClassName: meu-storage-class
+
