@@ -1,0 +1,20 @@
+
+Passo a Passo para Instalar o Kind
+Baixe o executável do Kind: Execute o comando abaixo para baixar o Kind para Linux (ou ajuste o comando para sua plataforma):
+
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+
+Torne o Kind executável:
+chmod +x ./kind
+
+Mova o Kind para o diretório de binários: Isso tornará o Kind acessível em qualquer terminal.
+
+sudo mv ./kind /usr/local/bin/kind
+
+Confirme a instalação: Verifique se o Kind foi instalado corretamente.
+kind --version
+
+Após a instalação, você poderá criar o cluster:
+
+kind create cluster --config kind-cluster.yaml
+
