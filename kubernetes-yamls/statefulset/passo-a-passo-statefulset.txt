@@ -1,0 +1,110 @@
+Fluxo de criacao de um stateFulSet
+
+StatefulSet: Garante que cada réplica de um pod tem seu próprio armazenamento persistente.
+PersistentVolume (PV): Um recurso de armazenamento no cluster, que pode ser manual (pré-criado) ou dinâmico (criado sob demanda).
+PersistentVolumeClaim (PVC): Uma requisição de armazenamento feita pelo StatefulSet, que tenta se conectar a um PV compatível.
+
+Passo 1: Criar a StorageClass (Opcional)
+A StorageClass define como o armazenamento deve ser provisionado (dinâmico ou manual). Para armazenamento manual, a StorageClass pode ser omitida no PV, e ele será escolhido diretamente pelo PVC.
+
+Se você estiver usando um provisionador dinâmico, crie uma StorageClass assim:
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: meu-storage
+provisioner: kubernetes.io/no-provisioner # Substitua por um provisionador específico se houver
+volumeBindingMode: WaitForFirstConsumer
+
+
+Para NFS, use kubernetes.io/no-provisioner para configurar o PV manualmente.
+
+Passo 2: Criar o PersistentVolume (PV)
+Cada réplica do StatefulSet precisa de um PV separado. Se você tiver três réplicas, precisará de três PVs, cada um apontando para um caminho de armazenamento único.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nginx-0
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: meu-storage
+  nfs:
+    path: /mnt/nfs/nginx-0 # Caminho no servidor NFS
+    server: 192.168.1.12   # IP do servidor NFS
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nginx-1
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: meu-storage
+  nfs:
+    path: /mnt/nfs/nginx-1
+    server: 192.168.1.12
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nginx-2
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: meu-storage
+  nfs:
+    path: /mnt/nfs/nginx-2
+    server: 192.168.1.12
+
+
+Cada PersistentVolume tem um caminho exclusivo no NFS para cada réplica.
+
+Passo 3: Configurar o StatefulSet com volumeClaimTemplates
+No StatefulSet, o volumeClaimTemplates é uma maneira de gerar automaticamente um PVC para cada réplica. Quando uma réplica nginx-0 é criada, o volumeClaimTemplates solicitará um PVC exclusivo, nginx-persistente-storage-nginx-0, vinculado a um PV.
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx
+  namespace: aplicacao
+spec:
+  serviceName: "nginx"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: nginx-persistente-storage
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: nginx-persistente-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "meu-storage"
+        resources:
+          requests:
+            storage: 1Gi
+
+Esse template cria um PVC para cada réplica (ex.: nginx-persistente-storage-nginx-0) que será associado automaticamente a um PV compatível.:
