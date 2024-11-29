@@ -1,8 +1,0 @@
-{
-    "editor.unusualLineTerminators": "auto",
-    "terminal.explorerKind": "integrated",
-    "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
-    "terminal.integrated.automationProfile.linux": {
-
-    }
-}
